@@ -1,0 +1,188 @@
+.wrapper {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Filial picker */
+.filialPicker {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 32px 20px 40px;
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.filialTitulo {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.filialList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filialBtn {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 15px;
+  font-family: var(--font-body);
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.filialBtn:hover {
+  border-color: var(--accent);
+  background: rgba(232, 255, 71, 0.04);
+}
+
+/* Header */
+.header {
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filialBadge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.filialBadge:hover { border-color: var(--accent); color: var(--text); }
+
+.gpsDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+  flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(71, 255, 138, 0.5);
+}
+
+.editIcon { font-size: 11px; opacity: 0.5; }
+
+.logoutBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-family: var(--font-body);
+  transition: color 0.15s;
+}
+.logoutBtn:hover { color: var(--error); }
+
+/* Clock */
+.clockArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.diaSemana {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+
+.hora {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 16vw, 80px);
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.data {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.ultimoRegistro {
+  margin-top: 24px;
+  font-size: 13px;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 8px 16px;
+}
+
+.ultimoRegistro strong { color: var(--text); }
+
+/* Footer */
+.footer {
+  padding: 20px;
+}
+
+.btnRegistrar {
+  width: 100%;
+  padding: 18px;
+  background: var(--accent);
+  color: #0a0a0a;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background 0.15s, transform 0.1s;
+  box-shadow: 0 4px 24px rgba(232, 255, 71, 0.2);
+}
+
+.btnRegistrar:hover { background: var(--accent-dark); }
+.btnRegistrar:active { transform: scale(0.99); }

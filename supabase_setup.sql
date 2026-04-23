@@ -92,3 +92,16 @@ CREATE POLICY "insert_registro_auth"
 CREATE POLICY "select_registro_auth"
   ON registros FOR SELECT
   USING (auth.role() = 'authenticated');
+
+-- ============================================
+-- Storage policies para gestor autenticado
+-- ============================================
+CREATE POLICY "upload_checkin_auth"
+  ON storage.objects FOR INSERT
+  TO authenticated
+  WITH CHECK (bucket_id = 'fotos-freelancers');
+
+CREATE POLICY "select_storage_auth"
+  ON storage.objects FOR SELECT
+  TO authenticated
+  USING (bucket_id = 'fotos-freelancers');

@@ -1,0 +1,299 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  width: 100%;
+  max-width: 480px;
+  background: var(--surface);
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow: hidden;
+  animation: slideUp 0.25s ease;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Camera */
+.cameraWrap {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  background: #000;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.guia {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -54%);
+  width: 180px;
+  height: 220px;
+  border: 2px solid rgba(232, 255, 71, 0.3);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  pointer-events: none;
+  transition: border-color 0.3s;
+}
+
+.guiaAtivo {
+  border-color: var(--accent);
+  animation: pulseBorder 2s ease-in-out infinite;
+}
+
+@keyframes pulseBorder {
+  0%, 100% { border-color: rgba(232, 255, 71, 0.4); }
+  50% { border-color: var(--accent); }
+}
+
+.barraConfianca {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+}
+
+.barraFill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.fecharCamera {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  transition: background 0.15s;
+}
+.fecharCamera:hover { background: rgba(0,0,0,0.8); }
+
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.loadingOverlay p {
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+}
+
+/* Identificado */
+.identificadoCard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  gap: 10px;
+  animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: var(--surface);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.fotoWrap {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.fotoFreelancer {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--success);
+}
+
+.checkBadge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--surface);
+}
+
+.registradoLabel {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--success);
+}
+
+.nomeIdentificado {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.03em;
+  text-align: center;
+}
+
+.filialIdentificada {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.horaIdentificada {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.04em;
+  margin-top: 8px;
+}
+
+.dataIdentificada {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.autoFechar {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* Centro (loading, erro) */
+.centerBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.centerBox p {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.erroBadge {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 77, 77, 0.1);
+  border: 2px solid var(--error);
+  color: var(--error);
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.erroTitulo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text) !important;
+}
+
+.erroDesc {
+  font-size: 14px;
+  color: var(--text-muted) !important;
+  max-width: 260px;
+}
+
+.btnTentar {
+  width: 100%;
+  max-width: 280px;
+  padding: 13px;
+  background: var(--accent);
+  color: #0a0a0a;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 4px;
+  transition: background 0.15s;
+}
+.btnTentar:hover { background: var(--accent-dark); }
+
+.btnFechar {
+  width: 100%;
+  max-width: 280px;
+  padding: 11px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  transition: color 0.15s, border-color 0.15s;
+}
+.btnFechar:hover { color: var(--text); border-color: var(--text-muted); }
+
+/* Spinner */
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
