@@ -4,32 +4,40 @@ import { supabase } from '../lib/supabase'
 import ReconhecimentoModal from '../components/ReconhecimentoModal'
 import styles from './RelogioPage.module.css'
 
-const FILIAIS = [
-  'BK 707 Norte', 'BK Taguatinga', 'BK Águas Claras', 'BK Ceilândia',
-  'BK Gama', 'BK Guará', 'BK Recanto', 'BK Samambaia', 'BK Santa Maria',
-  'BK Sobradinho', 'BK Planaltina', 'BK Brazlândia', 'BK Paranoá',
-  'BK São Sebastião', 'BK Riacho Fundo', 'BK Cruzeiro', 'BK Lago Sul',
-  'BK Lago Norte', 'BK Itapoã', 'BK Park Way'
-]
-
 export default function RelogioPage() {
   const [now, setNow] = useState(new Date())
-  const [filial, setFilial] = useState(() => localStorage.getItem('filial') || '')
-  const [showFilialPicker, setShowFilialPicker] = useState(!localStorage.getItem('filial'))
+  const [filial, setFilial] = useState(null)
+  const [erroVinculo, setErroVinculo] = useState(false)
   const [showReconhecimento, setShowReconhecimento] = useState(false)
   const [ultimoRegistro, setUltimoRegistro] = useState(null)
   const navigate = useNavigate()
 
-  // Atualiza relógio a cada segundo
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000)
     return () => clearInterval(t)
   }, [])
 
-  const handleSelecionarFilial = (f) => {
-    localStorage.setItem('filial', f)
-    setFilial(f)
-    setShowFilialPicker(false)
+  useEffect(() => {
+    carregarFilial()
+  }, [])
+
+  const carregarFilial = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { navigate('/gestor/login'); return }
+
+    const { data, error } = await supabase
+      .from('gestor_unidades')
+      .select('unidade')
+      .eq('gestor_id', user.id)
+      .eq('ativo', true)
+      .single()
+
+    if (error || !data) {
+      setErroVinculo(true)
+      return
+    }
+
+    setFilial(data.unidade)
   }
 
   const handleRegistroSucesso = (registro) => {
@@ -47,19 +55,16 @@ export default function RelogioPage() {
   const dataFormatada = now.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })
   const horaFormatada = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
 
-  if (showFilialPicker) {
+  if (erroVinculo) {
     return (
       <div className={styles.wrapper}>
         <div className={styles.filialPicker}>
           <div className={styles.brand}><span className={styles.dot} />Grupo Alvim</div>
-          <h2 className={styles.filialTitulo}>Selecione a filial</h2>
-          <div className={styles.filialList}>
-            {FILIAIS.map(f => (
-              <button key={f} className={styles.filialBtn} onClick={() => handleSelecionarFilial(f)}>
-                {f}
-              </button>
-            ))}
-          </div>
+          <h2 className={styles.filialTitulo}>Sem unidade vinculada</h2>
+          <p style={{ color: 'var(--text-muted, #888)', textAlign: 'center', fontSize: 14, marginBottom: 20 }}>
+            Seu usuário não está vinculado a nenhuma unidade. Entre em contato com o administrador.
+          </p>
+          <button className={styles.filialBtn} onClick={handleLogout}>Sair</button>
         </div>
       </div>
     )
@@ -69,10 +74,9 @@ export default function RelogioPage() {
     <div className={styles.wrapper}>
       {/* Header */}
       <div className={styles.header}>
-        <div className={styles.filialBadge} onClick={() => setShowFilialPicker(true)}>
+        <div className={styles.filialBadge}>
           <span className={styles.gpsDot} />
-          <span>{filial}</span>
-          <span className={styles.editIcon}>✎</span>
+          <span>{filial ?? '...'}</span>
         </div>
         <button className={styles.logoutBtn} onClick={handleLogout}>Sair</button>
       </div>
