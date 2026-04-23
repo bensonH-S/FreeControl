@@ -8,13 +8,36 @@ export default function GestorHome() {
   const [registros, setRegistros] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-  const [unidade, setUnidade] = useState(() => localStorage.getItem('unidade') || '')
-  const [showUnidade, setShowUnidade] = useState(false)
+  const [unidade, setUnidade] = useState(null)
+  const [erroVinculo, setErroVinculo] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!unidade) { setShowUnidade(true); setLoading(false); return }
-    fetchData()
+    carregarUnidade()
+  }, [])
+
+  const carregarUnidade = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { navigate('/gestor/login'); return }
+
+    const { data, error } = await supabase
+      .from('gestor_unidades')
+      .select('unidade')
+      .eq('gestor_id', user.id)
+      .eq('ativo', true)
+      .single()
+
+    if (error || !data) {
+      setErroVinculo(true)
+      setLoading(false)
+      return
+    }
+
+    setUnidade(data.unidade)
+  }
+
+  useEffect(() => {
+    if (unidade) fetchData()
   }, [unidade])
 
   const fetchData = async () => {
@@ -42,16 +65,6 @@ export default function GestorHome() {
     return new Date(entrada.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
   }
 
-  const handleSalvarUnidade = (e) => {
-    e.preventDefault()
-    const val = e.target.unidade.value.trim()
-    if (!val) return
-    localStorage.setItem('unidade', val)
-    setUnidade(val)
-    setShowUnidade(false)
-    fetchData()
-  }
-
   const handleLogout = async () => {
     await supabase.auth.signOut()
     navigate('/gestor/login')
@@ -62,15 +75,13 @@ export default function GestorHome() {
     f.cpf.includes(search.replace(/\D/g, ''))
   )
 
-  if (showUnidade) return (
+  if (erroVinculo) return (
     <div className={styles.wrapper}>
       <div className={styles.unidadeCard}>
         <div className={styles.brand}><span className={styles.dot} />Grupo Alvim</div>
-        <h2 className={styles.unidadeTitulo}>Qual é a sua unidade?</h2>
-        <form onSubmit={handleSalvarUnidade} className={styles.unidadeForm}>
-          <input name="unidade" className={styles.input} placeholder="Ex: Imperador, King, Centro..." autoFocus />
-          <button type="submit" className={styles.btn}>Confirmar →</button>
-        </form>
+        <h2 className={styles.unidadeTitulo}>Sem unidade vinculada</h2>
+        <p className={styles.erroTexto}>Seu usuário não está vinculado a nenhuma unidade. Entre em contato com o administrador do sistema.</p>
+        <button className={styles.btn} onClick={handleLogout}>Sair</button>
       </div>
     </div>
   )
@@ -80,8 +91,8 @@ export default function GestorHome() {
       <header className={styles.header}>
         <div className={styles.headerLeft}>
           <div className={styles.brand}><span className={styles.dot} />Grupo Alvim</div>
-          <div className={styles.unidadeBadge} onClick={() => setShowUnidade(true)}>
-            {unidade} <span className={styles.editIcon}>✎</span>
+          <div className={styles.unidadeBadge}>
+            {unidade}
           </div>
         </div>
         <button className={styles.logoutBtn} onClick={handleLogout}>Sair</button>

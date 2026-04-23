@@ -27,6 +27,14 @@
   letter-spacing: -0.02em;
 }
 
+.erroTexto {
+  font-size: 14px;
+  color: var(--text-muted, #888);
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
 .unidadeForm {
   display: flex;
   flex-direction: column;
