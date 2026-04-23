@@ -36,6 +36,16 @@ CREATE TABLE IF NOT EXISTS registros (
   created_at      TIMESTAMPTZ DEFAULT now()
 );
 
+-- Tabela de vinculação: gestor → unidade(s)
+CREATE TABLE IF NOT EXISTS gestor_unidades (
+  id            UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  gestor_id     UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  unidade       TEXT NOT NULL,
+  ativo         BOOLEAN DEFAULT true,
+  created_at    TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(gestor_id, unidade)  -- Um gestor não pode ter 2 linhas para mesma unidade
+);
+
 -- View prática para o painel do RH
 CREATE OR REPLACE VIEW v_presenca AS
 SELECT
@@ -73,7 +83,17 @@ ORDER BY r_entrada.created_at DESC;
 
 -- RLS policies básicas (ajuste conforme auth)
 ALTER TABLE freelancers ENABLE ROW LEVEL SECURITY;
-ALTER TABLE registros    ENABLE ROW LEVEL SECURITY;
+ALTER TABLE registros ENABLE ROW LEVEL SECURITY;
+ALTER TABLE gestor_unidades ENABLE ROW LEVEL SECURITY;
+
+-- Remove policies antigas, se já existirem
+DROP POLICY IF EXISTS "insert_freelancer_publico" ON freelancers;
+DROP POLICY IF EXISTS "select_freelancer_auth" ON freelancers;
+DROP POLICY IF EXISTS "insert_registro_auth" ON registros;
+DROP POLICY IF EXISTS "select_registro_auth" ON registros;
+DROP POLICY IF EXISTS "select_gestor_unidades_self" ON gestor_unidades;
+DROP POLICY IF EXISTS "upload_checkin_auth" ON storage.objects;
+DROP POLICY IF EXISTS "select_storage_auth" ON storage.objects;
 
 -- Permitir insert anônimo no cadastro (formulário público)
 CREATE POLICY "insert_freelancer_publico"
@@ -92,6 +112,10 @@ CREATE POLICY "insert_registro_auth"
 CREATE POLICY "select_registro_auth"
   ON registros FOR SELECT
   USING (auth.role() = 'authenticated');
+
+CREATE POLICY "select_gestor_unidades_self"
+  ON gestor_unidades FOR SELECT
+  USING (gestor_id = auth.uid());
 
 -- ============================================
 -- Storage policies para gestor autenticado
